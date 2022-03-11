@@ -3,6 +3,7 @@ package com.saama.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * @author bhushan.kathar

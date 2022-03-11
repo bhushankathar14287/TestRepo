@@ -2,11 +2,9 @@ package com.saama.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import com.saama.service.WordPocService;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
@@ -24,8 +22,12 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.saama.service.WordPocService;
 /**
  * @author bhushan.kathar
  */
@@ -168,14 +170,16 @@ public class WordPocServiceImpl implements WordPocService {
 
 
     @Override
-    public ByteArrayInputStream writeFile() {
+    public ByteArrayInputStream writeFile(){
         logger.info("WordPocServiceImpl :: writeFile :: start");
         ByteArrayInputStream byteArrayInputStream = null;
         String para1Text = "For all reporting, program names are meaningful descriptions of the program function.  The program names are limited to 32 characters. All programs use the standard CDARS SAS programming header and footer information, in addition to the study specific-titles and footnotes.";
-
-        String imgPath = "C:\\Users\\bhushan.kathar\\Downloads\\sama.png";
+        
+        
+        //String imgPath = "C:\\Users\\bhushan.kathar\\Downloads\\sama.png";
         try (XWPFDocument document = new XWPFDocument()) {
-
+        	Resource resource = new ClassPathResource("/images/sama.png");
+        	
             XWPFHeader head = document.createHeader(HeaderFooterType.DEFAULT);
             head.createParagraph()
                     .createRun()
@@ -225,7 +229,7 @@ public class WordPocServiceImpl implements WordPocService {
 
 
             XWPFRun region3 = document.createParagraph().createRun();
-            region3.addPicture(new FileInputStream(imgPath)
+            region3.addPicture(resource.getInputStream()
                     , Document.PICTURE_TYPE_PNG
                     , "sama"
                     , Units.toEMU(400)
