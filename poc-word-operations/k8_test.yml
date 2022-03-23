@@ -6,8 +6,6 @@ metadata:
   namespace: _NAMESPACE_NAME_
   labels:
     app: _APP_NAME_-deployment
-  annotations:
-    prometheus.io/scrape: “true”
 spec:
   replicas: 1
   strategy:
@@ -35,12 +33,6 @@ spec:
           subPath: application.properties
         ports:
         - containerPort: _IMAGE_PORT_
-        env:
-        - name: CATALINA_OPTS
-          valueFrom:
-             configMapKeyRef:
-                name: _APP_NAME_-config
-                key: CATALINA_OPTS
       volumes:
         - name: _APP_NAME_-config-volume
           configMap:
