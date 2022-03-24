@@ -6,8 +6,6 @@ metadata:
   namespace: _NAMESPACE_NAME_
   labels:
     app: _APP_NAME_-deployment
-  annotations:
-    prometheus.io/scrape: “true”
 spec:
   replicas: 1
   strategy:
@@ -35,42 +33,6 @@ spec:
           subPath: application.properties
         ports:
         - containerPort: _IMAGE_PORT_
-        env:
-        - name: CATALINA_OPTS
-          valueFrom:
-             configMapKeyRef:
-                name: _APP_NAME_-config
-                key: CATALINA_OPTS
-        - name: spring.datasource.username
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: RDS_USER
-        - name: spring.datasource.password
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: RDS_PASSWORD
-        - name: spring.datasource.rs.username
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: RDS2_USER
-        - name: spring.datasource.rs.password
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: RDS2_PASSWORD
-        - name: s3.accessKey
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: S3_ACCESS_KEY
-        - name: s3.secretKey
-          valueFrom:
-             secretKeyRef:
-                name: cdh-app-credentials
-                key: S3_SECRET_KEY
       volumes:
         - name: _APP_NAME_-config-volume
           configMap:
@@ -78,17 +40,3 @@ spec:
             items:
             - key: application.properties
               path: application.properties
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: _APP_NAME_-service
-  namespace: _NAMESPACE_NAME_
-spec:
-  selector:
-    app: _APP_NAME_-deployment
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: _IMAGE_PORT_
-  type: NodePort
